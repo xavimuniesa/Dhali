@@ -8,152 +8,56 @@
         :root {
             --mondaine-red: #e30613;
             --mondaine-black: #000000;
-            --mondaine-white: #ffffff;
-            --bg-color: #f2f2f2;
+            --bg-color: #f5f5f7;
             --card-bg: #ffffff;
-            --text-color: #000000;
-            --widget-bg: #eef1f4;
-            --widget-text: #5f6368;
+            --widget-bg: #f0f2f5;
+            --widget-text: #6e6e73;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 15px;
+            padding: 16px;
         }
 
-        /* Contenidor de la targeta */
         .app-card {
             background-color: var(--card-bg);
             border-radius: 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 360px;
-            padding: 24px 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* SECCIÓ RELLOTGE */
         .clock-section {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-bottom: 24px;
+        }
+
+        /* SVG del Rellotge */
+        .clock-svg {
+            width: 260px;
+            height: 260px;
             margin-bottom: 20px;
         }
 
-        /* Esfera Mondaine amb containment */
-        .clock {
-            width: 270px;
-            height: 270px;
-            background-color: var(--mondaine-white);
-            border: 14px solid var(--mondaine-black);
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden; /* Evita que les marques surtin de l'esfera */
-            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        /* Marques Mondaine autèntiques */
-        .dial-mark {
-            position: absolute;
-            background-color: var(--mondaine-black);
-            left: 50%;
-            transform-origin: 50% 135px; /* Pivotat respecte al centre de l'esfera */
-            top: 0;
-        }
-
-        .dial-mark.hour {
-            width: 10px;
-            height: 28px;
-            margin-left: -5px;
-        }
-
-        .dial-mark.minute {
-            width: 4px;
-            height: 10px;
-            margin-left: -2px;
-        }
-
-        /* Agulles Mondaine: Rectes, amples i sense puntes */
-        .hand {
-            position: absolute;
-            background-color: var(--mondaine-black);
-            transform-origin: 50% 100%;
-            left: 50%;
-        }
-
-        /* Horaria: Ample i recta */
-        .hand.hour-hand {
-            width: 16px;
-            height: 72px;
-            margin-left: -8px;
-            top: 63px;
-            z-index: 2;
-        }
-
-        /* Minutera: Recta i arriba fins a les marques de minut */
-        .hand.minute-hand {
-            width: 12px;
-            height: 108px;
-            margin-left: -6px;
-            top: 27px;
-            z-index: 3;
-            transition: transform 0.18s cubic-bezier(0.4, 2.2, 0.4, 0.8);
-        }
-
-        /* Segonera vermella amb pal recta i disc a la punta */
-        .hand.second-hand {
-            width: 4px;
-            height: 120px;
-            margin-left: -2px;
-            background-color: var(--mondaine-red);
-            top: 15px;
-            z-index: 4;
-            transform-origin: 50% 100px; /* Punt de rotació baix */
-        }
-
-        .second-hand::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 26px;
-            height: 26px;
-            background-color: var(--mondaine-red);
-            border-radius: 50%;
-        }
-
-        /* Botó/Eix central */
-        .center-nut {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 12px;
-            height: 12px;
-            margin-top: -6px;
-            margin-left: -6px;
-            background-color: var(--mondaine-black);
-            border-radius: 50%;
-            z-index: 5;
-        }
-
-        /* VINYETES INFO METEO */
+        /* Vinyetes Info */
         .widgets-container {
             width: 100%;
             display: flex;
@@ -164,26 +68,26 @@
             flex: 1;
             background-color: var(--widget-bg);
             border-radius: 14px;
-            padding: 10px 12px;
+            padding: 12px;
             text-align: center;
         }
 
         .widget-title {
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: var(--widget-text);
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
         .widget-value {
             font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text-color);
-            margin-top: 2px;
+            font-weight: 700;
+            color: #000;
         }
 
-        /* SECCIÓ CALENDARI */
+        /* Calendari */
         .calendar-section {
             width: 100%;
         }
@@ -192,34 +96,35 @@
             text-align: center;
             font-weight: 700;
             font-size: 1.25rem;
-            margin: 15px 0;
-            text-transform: lowercase;
+            margin-bottom: 16px;
+            text-transform: capitalize;
+            color: #000;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            gap: 4px;
             text-align: center;
         }
 
         .day-name {
-            font-weight: 700;
-            font-size: 0.82rem;
-            color: var(--text-color);
-            padding-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--widget-text);
+            padding-bottom: 8px;
         }
 
         .day {
             font-size: 0.95rem;
             padding: 8px 0;
             border-radius: 10px;
-            color: var(--text-color);
+            color: #000;
         }
 
         .day.today {
             background-color: var(--mondaine-red);
-            color: var(--mondaine-white);
+            color: #ffffff;
             font-weight: 700;
         }
 
@@ -232,12 +137,29 @@
 
 <div class="app-card">
     <div class="clock-section">
-        <div class="clock" id="clock">
-            <div class="hand hour-hand" id="hourHand"></div>
-            <div class="hand minute-hand" id="minuteHand"></div>
-            <div class="hand second-hand" id="secondHand"></div>
-            <div class="center-nut"></div>
-        </div>
+        <!-- Rellotge vectorial definit en SVG -->
+        <svg class="clock-svg" viewBox="0 0 300 300">
+            <!-- Marc exterior negre Mondaine -->
+            <circle cx="150" cy="150" r="140" fill="#ffffff" stroke="#000000" stroke-width="12"/>
+
+            <!-- Grup de marques generat dinàmicament -->
+            <g id="dial-marks"></g>
+
+            <!-- Agulla Horària (recta i gruixuda) -->
+            <rect id="hourHand" x="142" y="75" width="16" height="85" fill="#000000" rx="1" transform-origin="150 150"/>
+
+            <!-- Agulla Minutera (recta i llarga) -->
+            <rect id="minuteHand" x="144" y="35" width="12" height="125" fill="#000000" rx="1" transform-origin="150 150"/>
+
+            <!-- Agulla Segonera Stop2Go (Línia vermella + cercle extrem) -->
+            <g id="secondHand" transform-origin="150 150">
+                <line x1="150" y1="180" x2="150" y2="35" stroke="#e30613" stroke-width="4" stroke-linecap="square"/>
+                <circle cx="150" cy="35" r="14" fill="#e30613"/>
+            </g>
+
+            <!-- Eix central negre -->
+            <circle cx="150" cy="150" r="6" fill="#000000"/>
+        </svg>
 
         <div class="widgets-container">
             <div class="widget">
@@ -254,27 +176,42 @@
     <div class="calendar-section">
         <div class="calendar-header" id="calendarHeader"></div>
         <div class="calendar-grid" id="calendarGrid">
-            <div class="day-name">Dill</div>
-            <div class="day-name">Dim</div>
-            <div class="day-name">Dmc</div>
-            <div class="day-name">Dij</div>
-            <div class="day-name">Dvd</div>
-            <div class="day-name">Dst</div>
-            <div class="day-name">Dmg</div>
+            <div class="day-name">Dl</div>
+            <div class="day-name">Dt</div>
+            <div class="day-name">Dc</div>
+            <div class="day-name">Dj</div>
+            <div class="day-name">Dv</div>
+            <div class="day-name">Ds</div>
+            <div class="day-name">Dg</div>
         </div>
     </div>
 </div>
 
 <script>
-    // Generar marques perfectament posicionades
-    const clock = document.getElementById('clock');
+    // --- GENERACIÓ DE MARQUES EN SVG (Puntos exacte de l'esfera) ---
+    const marksGroup = document.getElementById('dial-marks');
     for (let i = 0; i < 60; i++) {
-        const mark = document.createElement('div');
-        mark.className = `dial-mark ${i % 5 === 0 ? 'hour' : 'minute'}`;
-        mark.style.transform = `rotate(${i * 6}deg)`;
-        clock.appendChild(mark);
+        const angle = i * 6;
+        const isHour = i % 5 === 0;
+        
+        const mark = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        if (isHour) {
+            mark.setAttribute("x", "145");
+            mark.setAttribute("y", "18");
+            mark.setAttribute("width", "10");
+            mark.setAttribute("height", "28");
+        } else {
+            mark.setAttribute("x", "148.5");
+            mark.setAttribute("y", "18");
+            mark.setAttribute("width", "3");
+            mark.setAttribute("height", "10");
+        }
+        mark.setAttribute("fill", "#000000");
+        mark.setAttribute("transform", `rotate(${angle} 150 150)`);
+        marksGroup.appendChild(mark);
     }
 
+    // --- LÒGICA STOP2GO I CONTROL DE TEMPS ---
     let currentMinute = -1;
 
     function updateClock() {
@@ -284,22 +221,23 @@
         const m = now.getMinutes();
         const h = now.getHours();
 
-        // 1. Segonera Stop2Go (58s de recorregut continu + 2s de pausa a les 12)
+        // 1. Segonera Stop2Go: 360º en 58s (58000ms), 2s parada a les 12
         let secondAngle = 0;
         if (s < 58) {
             const totalMs = s * 1000 + ms;
             secondAngle = (totalMs / 58000) * 360;
         } else {
-            secondAngle = 360;
+            secondAngle = 360; // Parada a dalt exactament
         }
 
-        // 2. Angles de les agulles
+        // 2. Moviment de minuts i hores
         const minuteAngle = m * 6;
         const hourAngle = ((h % 12) * 30) + (m * 0.5);
 
-        document.getElementById('secondHand').style.transform = `rotate(${secondAngle}deg)`;
-        document.getElementById('minuteHand').style.transform = `rotate(${minuteAngle}deg)`;
-        document.getElementById('hourHand').style.transform = `rotate(${hourAngle}deg)`;
+        // Aplicar rotació als elements SVG
+        document.getElementById('secondHand').setAttribute('transform', `rotate(${secondAngle} 150 150)`);
+        document.getElementById('minuteHand').setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
+        document.getElementById('hourHand').setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
         if (m !== currentMinute) {
             currentMinute = m;
@@ -309,24 +247,22 @@
         requestAnimationFrame(updateClock);
     }
 
-    // Calendari amb inici en Dilluns
+    // --- CALENDARI ---
     function renderCalendar() {
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
         const today = now.getDate();
 
-        const monthNames = ["agost", "setembre", "octubre", "novembre", "desembre", "gener", "febrer", "març", "abril", "maig", "juny", "juliol"];
-        // Ús del nom real del mes actual
-        const currentMonthName = new Intl.DateTimeFormat('ca-ES', { month: 'long' }).format(now);
-        document.getElementById('calendarHeader').innerText = `${currentMonthName} ${year}`;
+        const monthName = new Intl.DateTimeFormat('ca-ES', { month: 'long' }).format(now);
+        document.getElementById('calendarHeader').innerText = `${monthName} ${year}`;
 
         const grid = document.getElementById('calendarGrid');
         const oldDays = grid.querySelectorAll('.day');
         oldDays.forEach(d => d.remove());
 
         let firstDayIndex = new Date(year, month, 1).getDay();
-        firstDayIndex = (firstDayIndex === 0) ? 6 : firstDayIndex - 1;
+        firstDayIndex = (firstDayIndex === 0) ? 6 : firstDayIndex - 1; // Ajust per començar en Dilluns
 
         const totalDays = new Date(year, month + 1, 0).getDate();
 
@@ -344,7 +280,7 @@
         }
     }
 
-    // Geolocalització i API Meteo
+    // --- DADES GEOLOCALITZACIÓ ---
     async function fetchLocationData() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {

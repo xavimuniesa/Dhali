@@ -3,304 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rellotge Estació Suïssa - Stop2Go</title>
+    <title>Rellotge Stop2Go & Calendari</title>
     <style>
+        :root {
+            --mondaine-red: #e30613;
+            --mondaine-black: #1a1a1a;
+            --mondaine-white: #f8f9fa;
+            --bg-color: #e9ecef;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--mondaine-black);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
 
         .container {
             display: flex;
             flex-direction: column;
+            gap: 30px;
             align-items: center;
-            gap: 40px;
-            max-width: 1200px;
+            max-width: 1000px;
             width: 100%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
+        /* Responsive: Costat a costat en pantalles grans */
         @media (min-width: 768px) {
             .container {
                 flex-direction: row;
-                justify-content: center;
-                align-items: flex-start;
+                justify-content: space-around;
             }
         }
 
-        /* Rellotge */
-        .clock-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        .clock-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
 
+        /* Disseny Rellotge Mondaine */
         .clock {
-            width: 300px;
-            height: 300px;
-            border: 12px solid #000;
+            width: 280px;
+            height: 280px;
+            background-color: var(--mondaine-white);
+            border: 12px solid var(--mondaine-black);
             border-radius: 50%;
             position: relative;
-            background: white;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
 
-        .clock-face {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .marker {
+        /* Marks (Hores i Minuts) */
+        .dial-mark {
             position: absolute;
-            width: 4px;
-            height: 15px;
-            background: #000;
+            background-color: var(--mondaine-black);
             left: 50%;
-            transform-origin: 50% 150px;
-            transform: translateX(-50%);
+            transform-origin: 50% 100%;
         }
 
-        .marker.hour {
-            width: 6px;
-            height: 20px;
+        .dial-mark.hour {
+            width: 8px;
+            height: 24px;
+            margin-left: -4px;
+            top: 10px;
         }
 
-        .center-dot {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: #000;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
+        .dial-mark.minute {
+            width: 3px;
+            height: 10px;
+            margin-left: -1.5px;
+            top: 10px;
         }
 
+        /* Agulles */
         .hand {
             position: absolute;
-            transform-origin: 50% 100%;
             bottom: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            border-radius: 4px;
+            transform-origin: 50% 100%;
+            background-color: var(--mondaine-black);
         }
 
-        .hour-hand {
-            width: 8px;
-            height: 70px;
-            background: #000;
+        .hand.hour-hand {
+            width: 14px;
+            height: 75px;
+            margin-left: -7px;
+            border-radius: 2px;
+            z-index: 2;
         }
 
-        .minute-hand {
-            width: 6px;
-            height: 100px;
-            background: #000;
+        .hand.minute-hand {
+            width: 10px;
+            height: 110px;
+            margin-left: -5px;
+            border-radius: 2px;
+            z-index: 3;
+            transition: transform 0.15s cubic-bezier(0.4, 2.08, 0.55, 0.44); /* Salt característic */
         }
 
-        .second-hand {
+        .hand.second-hand {
             width: 4px;
-            height: 120px;
-            background: #ff0000;
-            z-index: 5;
+            height: 100px;
+            margin-left: -2px;
+            background-color: var(--mondaine-red);
+            z-index: 4;
+            transform-origin: 50% 85%; /* Eix lleugerament desplaçat */
+            bottom: 35%;
         }
 
         .second-hand::after {
             content: '';
             position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 12px;
-            background: #ff0000;
+            top: -12px;
+            left: -10px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--mondaine-red);
             border-radius: 50%;
         }
 
-        .info-panel {
-            margin-top: 20px;
-            text-align: center;
-            color: #333;
+        .center-nut {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            margin-top: -6px;
+            margin-left: -6px;
+            background-color: var(--mondaine-black);
+            border-radius: 50%;
+            z-index: 5;
         }
 
-        .info-item {
-            margin: 10px 0;
-            font-size: 16px;
+        /* Vinyetes Info Meteo/Altitud */
+        .widgets {
             display: flex;
-            align-items: center;
+            gap: 15px;
+            width: 100%;
             justify-content: center;
-            gap: 8px;
         }
 
-        .info-icon {
-            font-size: 20px;
+        .widget {
+            background: var(--bg-color);
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            max-width: 130px;
+        }
+
+        .widget-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .widget-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 4px;
         }
 
         /* Calendari */
-        .calendar-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        .calendar-section {
             width: 100%;
-            max-width: 400px;
+            max-width: 320px;
         }
 
         .calendar-header {
             text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .calendar-header h2 {
-            color: #000;
-            font-size: 24px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-transform: capitalize;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
-        }
-
-        .calendar-day-header {
             text-align: center;
-            padding: 10px 5px;
-            font-weight: 600;
-            color: #000;
-            font-size: 14px;
-            text-transform: uppercase;
         }
 
-        .calendar-day {
-            text-align: center;
-            padding: 12px 5px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #333;
-            transition: all 0.3s ease;
+        .day-name {
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #6c757d;
+            padding-bottom: 5px;
         }
 
-        .calendar-day.today {
-            background: #ff0000;
+        .day {
+            padding: 10px 0;
+            font-size: 0.95rem;
+            border-radius: 6px;
+        }
+
+        .day.today {
+            background-color: var(--mondaine-red);
             color: white;
-            font-weight: 600;
-            transform: scale(1.05);
+            font-weight: bold;
         }
 
-        .calendar-day.empty {
-            background: transparent;
-        }
-
-        .calendar-day.other-month {
-            color: #ccc;
-            background: #fafafa;
-        }
-
-        @media (max-width: 767px) {
-            .clock {
-                width: 250px;
-                height: 250px;
-            }
-
-            .marker {
-                transform-origin: 50% 125px;
-            }
-
-            .hour-hand {
-                height: 60px;
-            }
-
-            .minute-hand {
-                height: 85px;
-            }
-
-            .second-hand {
-                height: 100px;
-            }
-
-            .calendar-container {
-                padding: 20px;
-            }
-
-            .calendar-day-header {
-                font-size: 12px;
-                padding: 8px 2px;
-            }
-
-            .calendar-day {
-                padding: 10px 2px;
-                font-size: 12px;
-            }
+        .day.empty {
+            visibility: hidden;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="clock-container">
-            <div class="clock">
-                <div class="clock-face" id="clockFace"></div>
-                <div class="center-dot"></div>
-            </div>
-            <div class="info-panel">
-                <div class="info-item">
-                    <span class="info-icon">🌡️</span>
-                    <span id="temperature">Carregant temperatura...</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">⛰️</span>
-                    <span id="altitude">Carregant altitud...</span>
-                </div>
-            </div>
+
+<div class="container">
+    <!-- Secció Rellotge -->
+    <div class="clock-section">
+        <div class="clock" id="clock">
+            <div class="hand hour-hand" id="hourHand"></div>
+            <div class="hand minute-hand" id="minuteHand"></div>
+            <div class="hand second-hand" id="secondHand"></div>
+            <div class="center-nut"></div>
         </div>
 
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <h2 id="calendarMonth"></h2>
+        <div class="widgets">
+            <div class="widget">
+                <div class="widget-title">Temp. Local</div>
+                <div class="widget-value" id="tempValue">-- °C</div>
             </div>
-            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="widget">
+                <div class="widget-title">Altitud</div>
+                <div class="widget-value" id="altValue">-- m</div>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Crear marcadors del rellotge
-        const clockFace = document.getElementById('clockFace');
-        for (let i = 0; i < 60; i++) {
-            const marker = document.createElement('div');
-            marker.className = i % 5 === 0 ? 'marker hour' : 'marker';
-            marker.style.transform = `translateX(-50%) rotate(${i * 6}deg)`;
-            clockFace.appendChild(marker);
+    <!-- Secció Calendari -->
+    <div class="calendar-section">
+        <div class="calendar-header" id="calendarHeader"></div>
+        <div class="calendar-grid" id="calendarGrid">
+            <div class="day-name">Dl</div>
+            <div class="day-name">Dt</div>
+            <div class="day-name">Dc</div>
+            <div class="day-name">Dj</div>
+            <div class="day-name">Dv</div>
+            <div class="day-name">Ds</div>
+            <div class="day-name">Dg</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Generar marques del rellotge
+    const clock = id('clock');
+    for (let i = 0; i < 60; i++) {
+        const mark = document.createElement('div');
+        mark.className = `dial-mark ${i % 5 === 0 ? 'hour' : 'minute'}`;
+        mark.style.transform = `rotate(${i * 6}deg)`;
+        clock.appendChild(mark);
+    }
+
+    function id(elemId) { return document.getElementById(elemId); }
+
+    // Lògica Stop2Go
+    let currentMinute = -1;
+
+    function updateClock() {
+        const now = new Date();
+        const ms = now.getMilliseconds();
+        const s = now.getSeconds();
+        const m = now.getMinutes();
+        const h = now.getHours();
+
+        // 1. Segonera Stop2Go (58s de gir continu + 2s aturada a les 12)
+        let secondAngle = 0;
+        if (s < 58) {
+            const totalMs = s * 1000 + ms;
+            secondAngle = (totalMs / 58000) * 360;
+        } else {
+            secondAngle = 360; // S'atura exactament a dalt
         }
 
-        // Crear busques
-        const clock = document.querySelector('.clock');
-        const hourHand = document.createElement('div');
-        hourHand.className = 'hand hour-hand';
-        const minuteHand = document.createElement('div');
-        minuteHand.className = 'hand minute-hand';
-        const secondHand = document.createElement('div');
-        secondHand.className = 'hand second-hand';
+        // 2. Salt instantani de la minutera a les 12 (al segon 0)
+        const minuteAngle = (m * 6);
+        const hourAngle = ((h % 12) * 30) + (m * 0.5);
 
-        clock.appendChild(hourHand);
-        clock.appendChild(minuteHand);
-        clock.appendChild(secondHand);
+        id('secondHand').style.transform = `rotate(${secondAngle}deg)`;
+        id('minuteHand').style.transform = `rotate(${minuteAngle}deg)`;
+        id('hourHand').style.transform = `rotate(${hourAngle}deg)`;
 
-        // Funció Stop2Go: 58 segons de moviment, 2 segons de pausa
-        let secondsProgress = 0;
-        let isPaused = false;
-        let pauseStartTime = 0;
+        // Actualitzar el calendari si canvia de dia
+        if (m !== currentMinute) {
+            currentMinute = m;
+            if (h === 0 && m === 0) renderCalendar();
+        }
+
+        requestAnimationFrame(updateClock);
+    }
+
+    // Lògica Calendari (Inici en Dilluns)
+    function renderCalendar() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const today = now.getDate();
+
+        const monthNames = ["Gener", "Febrer", "Març", "Abril", "Maig", "Juny", "Jost", "Setembre", "Octubre", "Novembre", "Desembre"];
+        id('calendarHeader').innerText = `${monthNames[month]} ${year}`;
+
+        const grid = id('calendarGrid');
+        // Netejar dies anteriors
+        const days = grid.querySelectorAll('.day');
+        days.forEach(d => d.remove());
+
+        const firstDay = new Date(year, month, 1).getDay();
+        // Ajustar perquè el primer dia sigui dilluns (0=Dilluns, 6=Diumenge)
+        const startingDay = (firstDay === 0 ? 6 : firstDay - 1);
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        // Dies buits
+        for (let i = 0; i < startingDay; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'day empty';
+            grid.appendChild(emptyCell);
+        }
+
+        // Dies del mes
+        for (let day = 1; day <= totalDays; day++) {
+            const dayCell = document.createElement('div');
+            dayCell.className = `day ${day === today ? 'today' : ''}`;
+            dayCell.innerText = day;
+            grid.appendChild(dayCell);
+        }
+    }
+
+    // Geolocalització, Temperatura i Altitud (Open-Meteo API)
+    function fetchLocationData() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                try {
+                    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&elevation=nan`);
+                    const data = await response.json();
+                    
+                    if(data.current && data.current.temperature_2m !== undefined) {
+                        id('tempValue').innerText = `${Math.round(data.current.temperature_2m)} °C`;
+                    }
+                    if(data.elevation !== undefined) {
+                        id('altValue').innerText = `${Math.round(data.elevation)} m`;
+                    }
+                } catch (e) {
+                    id('tempValue').innerText = "N/A";
+                    id('altValue').innerText = "N/A";
+                }
+            }, () => {
+                id('tempValue').innerText = "Bloquejat";
+                id('altValue').innerText = "Bloquejat";
+            });
+        }
+    }
+
+    // Inicialització
+    renderCalendar();
+    fetchLocationData();
+    requestAnimationFrame(updateClock);
+</script>
+</body>
+</html>

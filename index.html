@@ -58,12 +58,9 @@
             filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.15));
         }
 
-        /* Rotació d'agulles des del centre exacte (150, 150) */
-        #hourHand, #minuteHand, #secondHand {
-            transform-origin: 150px 150px;
-            transform-box: fill-box;
-            /* Ombra projectada a les agulles per donar efecte de volum i alçada */
-            filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.25));
+        /* Ombra d'alçada i volum per a les agulles */
+        .hand-shadow {
+            filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.3));
         }
 
         .widgets-container {
@@ -147,28 +144,28 @@
 <div class="app-card">
     <div class="clock-section">
         <svg class="clock-svg" viewBox="0 0 300 300">
-            <!-- Marc exterior negre amb perfil amb volum -->
+            <!-- Marc exterior negre amb volum -->
             <circle cx="150" cy="150" r="140" fill="#ffffff" stroke="#000000" stroke-width="12"/>
 
             <!-- Branding / Logo "DOMAINE" -->
-            <text x="150" y="95" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="900" letter-spacing="2" fill="#000000" text-anchor="middle">MONDAINE</text>
+            <text x="150" y="105" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="2.5" fill="#000000" text-anchor="middle">DOMAINE</text>
 
             <!-- Marques d'hores i minuts -->
             <g id="dial-marks"></g>
 
-            <!-- Agulla Horària amb cua posterior (línia des de 170 fins a 75) -->
-            <line id="hourHand" x1="150" y1="170" x2="150" y2="75" stroke="#000000" stroke-width="14" stroke-linecap="butt"/>
+            <!-- Agulla Horària amb cua posterior (de y1=170 a y2=75) -->
+            <line id="hourHand" class="hand-shadow" x1="150" y1="170" x2="150" y2="75" stroke="#000000" stroke-width="14" stroke-linecap="butt"/>
 
-            <!-- Agulla Minutera amb cua posterior (línia des de 175 fins a 35) -->
-            <line id="minuteHand" x1="150" y1="175" x2="150" y2="35" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
+            <!-- Agulla Minutera amb cua posterior (de y1=175 a y2=35) -->
+            <line id="minuteHand" class="hand-shadow" x1="150" y1="175" x2="150" y2="35" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
 
-            <!-- Segonera Stop2Go (Cua + Línia + Disc vermell) -->
-            <g id="secondHand">
+            <!-- Segonera Stop2Go amb cua, línia i disc vermell -->
+            <g id="secondHand" class="hand-shadow">
                 <line x1="150" y1="180" x2="150" y2="48" stroke="#e30613" stroke-width="4" stroke-linecap="butt"/>
                 <circle cx="150" cy="38" r="13" fill="#e30613"/>
             </g>
 
-            <!-- Tapa de l'eix central -->
+            <!-- Tapa central de l'eix -->
             <circle cx="150" cy="150" r="7" fill="#000000"/>
         </svg>
 
@@ -226,7 +223,7 @@
         const m = now.getMinutes();
         const h = now.getHours();
 
-        // Moviment Stop2Go: 360º en 58s, pausa 2s a les 12
+        // Moviment Stop2Go: 360º en 58s, pausa de 2s a les 12
         let secondAngle = 0;
         if (s < 58) {
             const totalMs = s * 1000 + ms;
@@ -239,10 +236,10 @@
         const minuteAngle = m * 6;
         const hourAngle = ((h % 12) * 30) + (m * 0.5);
 
-        // Assignació de la rotació sobre el centre exacte
-        document.getElementById('secondHand').style.transform = `rotate(${secondAngle}deg)`;
-        document.getElementById('minuteHand').style.transform = `rotate(${minuteAngle}deg)`;
-        document.getElementById('hourHand').style.transform = `rotate(${hourAngle}deg)`;
+        // Assignació de la rotació nativa SVG centrada exactament a (150, 150)
+        document.getElementById('secondHand').setAttribute('transform', `rotate(${secondAngle} 150 150)`);
+        document.getElementById('minuteHand').setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
+        document.getElementById('hourHand').setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
         if (m !== currentMinute) {
             currentMinute = m;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rellotge Mondaine Stop2Go & Calendari</title>
+    <title>Rellotge Domaine Stop2Go & Calendari</title>
     <style>
         :root {
             --mondaine-red: #e30613;
@@ -33,7 +33,7 @@
         .app-card {
             background-color: var(--card-bg);
             border-radius: 28px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
             width: 100%;
             max-width: 360px;
             padding: 24px;
@@ -54,12 +54,16 @@
             width: 270px;
             height: 270px;
             margin-bottom: 20px;
+            /* Ombra d'enfonsament/rellevat per a la caixa exterior del rellotge */
+            filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.15));
         }
 
-        /* CLAU: Forçar el punt de rotació al centre exacte de l'SVG (150px, 150px) */
+        /* Rotació d'agulles des del centre exacte (150, 150) */
         #hourHand, #minuteHand, #secondHand {
             transform-origin: 150px 150px;
             transform-box: fill-box;
+            /* Ombra projectada a les agulles per donar efecte de volum i alçada */
+            filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.25));
         }
 
         .widgets-container {
@@ -74,6 +78,7 @@
             border-radius: 14px;
             padding: 12px;
             text-align: center;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
         }
 
         .widget-title {
@@ -129,6 +134,7 @@
             background-color: var(--mondaine-red);
             color: #ffffff;
             font-weight: 700;
+            box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
         }
 
         .day.empty {
@@ -141,25 +147,28 @@
 <div class="app-card">
     <div class="clock-section">
         <svg class="clock-svg" viewBox="0 0 300 300">
-            <!-- Marc exterior negre -->
+            <!-- Marc exterior negre amb perfil amb volum -->
             <circle cx="150" cy="150" r="140" fill="#ffffff" stroke="#000000" stroke-width="12"/>
+
+            <!-- Branding / Logo "DOMAINE" -->
+            <text x="150" y="95" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="900" letter-spacing="2" fill="#000000" text-anchor="middle">MONDAINE</text>
 
             <!-- Marques d'hores i minuts -->
             <g id="dial-marks"></g>
 
-            <!-- Agulla Horària -->
-            <line id="hourHand" x1="150" y1="150" x2="150" y2="75" stroke="#000000" stroke-width="14" stroke-linecap="butt"/>
+            <!-- Agulla Horària amb cua posterior (línia des de 170 fins a 75) -->
+            <line id="hourHand" x1="150" y1="170" x2="150" y2="75" stroke="#000000" stroke-width="14" stroke-linecap="butt"/>
 
-            <!-- Agulla Minutera -->
-            <line id="minuteHand" x1="150" y1="150" x2="150" y2="35" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
+            <!-- Agulla Minutera amb cua posterior (línia des de 175 fins a 35) -->
+            <line id="minuteHand" x1="150" y1="175" x2="150" y2="35" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
 
             <!-- Segonera Stop2Go (Cua + Línia + Disc vermell) -->
             <g id="secondHand">
-                <line x1="150" y1="175" x2="150" y2="48" stroke="#e30613" stroke-width="4" stroke-linecap="butt"/>
+                <line x1="150" y1="180" x2="150" y2="48" stroke="#e30613" stroke-width="4" stroke-linecap="butt"/>
                 <circle cx="150" cy="38" r="13" fill="#e30613"/>
             </g>
 
-            <!-- Punt de l'eix central -->
+            <!-- Tapa de l'eix central -->
             <circle cx="150" cy="150" r="7" fill="#000000"/>
         </svg>
 
@@ -217,7 +226,7 @@
         const m = now.getMinutes();
         const h = now.getHours();
 
-        // Moviment Stop2Go: 360º en 58 segons, pausa de 2 segons a les 12
+        // Moviment Stop2Go: 360º en 58s, pausa 2s a les 12
         let secondAngle = 0;
         if (s < 58) {
             const totalMs = s * 1000 + ms;
@@ -230,7 +239,7 @@
         const minuteAngle = m * 6;
         const hourAngle = ((h % 12) * 30) + (m * 0.5);
 
-        // Assignació directa de la rotació sobre l'eix central
+        // Assignació de la rotació sobre el centre exacte
         document.getElementById('secondHand').style.transform = `rotate(${secondAngle}deg)`;
         document.getElementById('minuteHand').style.transform = `rotate(${minuteAngle}deg)`;
         document.getElementById('hourHand').style.transform = `rotate(${hourAngle}deg)`;
@@ -243,7 +252,7 @@
         requestAnimationFrame(updateClock);
     }
 
-    // Calendari
+    // Generació del calendari
     function renderCalendar() {
         const now = new Date();
         const year = now.getFullYear();
@@ -276,7 +285,7 @@
         }
     }
 
-    // Dades locals de clima/altitud
+    // Geolocalització i dades de temperatura/altitud
     async function fetchLocationData() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {

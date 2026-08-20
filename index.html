@@ -56,6 +56,12 @@
             margin-bottom: 20px;
         }
 
+        /* CLAU: Forçar el punt de rotació al centre exacte de l'SVG (150px, 150px) */
+        #hourHand, #minuteHand, #secondHand {
+            transform-origin: 150px 150px;
+            transform-box: fill-box;
+        }
+
         .widgets-container {
             width: 100%;
             display: flex;
@@ -141,24 +147,20 @@
             <!-- Marques d'hores i minuts -->
             <g id="dial-marks"></g>
 
-            <!-- Agulla Horària (dibuixada des del centre 150,150) -->
-            <g id="hourHand">
-                <line x1="150" y1="150" x2="150" y2="75" stroke="#000000" stroke-width="16" stroke-linecap="butt"/>
-            </g>
+            <!-- Agulla Horària -->
+            <line id="hourHand" x1="150" y1="150" x2="150" y2="75" stroke="#000000" stroke-width="14" stroke-linecap="butt"/>
 
-            <!-- Agulla Minutera (dibuixada des del centre 150,150) -->
-            <g id="minuteHand">
-                <line x1="150" y1="150" x2="150" y2="35" stroke="#000000" stroke-width="12" stroke-linecap="butt"/>
-            </g>
+            <!-- Agulla Minutera -->
+            <line id="minuteHand" x1="150" y1="150" x2="150" y2="35" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
 
-            <!-- Segonera Stop2Go (Línia + Disc vermell amb cua posterior) -->
+            <!-- Segonera Stop2Go (Cua + Línia + Disc vermell) -->
             <g id="secondHand">
                 <line x1="150" y1="175" x2="150" y2="48" stroke="#e30613" stroke-width="4" stroke-linecap="butt"/>
                 <circle cx="150" cy="38" r="13" fill="#e30613"/>
             </g>
 
-            <!-- Paret/Capa central -->
-            <circle cx="150" cy="150" r="8" fill="#000000"/>
+            <!-- Punt de l'eix central -->
+            <circle cx="150" cy="150" r="7" fill="#000000"/>
         </svg>
 
         <div class="widgets-container">
@@ -188,7 +190,7 @@
 </div>
 
 <script>
-    // Generar marques de l'esfera de manera precisa
+    // Generar marques de l'esfera
     const marksGroup = document.getElementById('dial-marks');
     for (let i = 0; i < 60; i++) {
         const angle = i * 6;
@@ -215,7 +217,7 @@
         const m = now.getMinutes();
         const h = now.getHours();
 
-        // Moviment Stop2Go: 360º en 58 segons, pausa de 2s a les 12
+        // Moviment Stop2Go: 360º en 58 segons, pausa de 2 segons a les 12
         let secondAngle = 0;
         if (s < 58) {
             const totalMs = s * 1000 + ms;
@@ -228,10 +230,10 @@
         const minuteAngle = m * 6;
         const hourAngle = ((h % 12) * 30) + (m * 0.5);
 
-        // Rotació exacte prenent com a pivot el centre de l'SVG (150, 150)
-        document.getElementById('secondHand').setAttribute('transform', `rotate(${secondAngle} 150 150)`);
-        document.getElementById('minuteHand').setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
-        document.getElementById('hourHand').setAttribute('transform', `rotate(${hourAngle} 150 150)`);
+        // Assignació directa de la rotació sobre l'eix central
+        document.getElementById('secondHand').style.transform = `rotate(${secondAngle}deg)`;
+        document.getElementById('minuteHand').style.transform = `rotate(${minuteAngle}deg)`;
+        document.getElementById('hourHand').style.transform = `rotate(${hourAngle}deg)`;
 
         if (m !== currentMinute) {
             currentMinute = m;
@@ -241,7 +243,7 @@
         requestAnimationFrame(updateClock);
     }
 
-    // Calendari mensual
+    // Calendari
     function renderCalendar() {
         const now = new Date();
         const year = now.getFullYear();
@@ -274,7 +276,7 @@
         }
     }
 
-    // Geolocalització i API Meteo
+    // Dades locals de clima/altitud
     async function fetchLocationData() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
